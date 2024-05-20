@@ -1,4 +1,4 @@
-
+"use strict";
 let cells = document.querySelectorAll('[data-cell]');
 let display = document.getElementById('check');
 let audio = document.getElementById('myAudio');
@@ -6,8 +6,8 @@ let audio = document.getElementById('myAudio');
 let PLAYER_X = 'X';
 let PLAYER_O = 'O';
 let currentPlayer = Math.random() > 0.5 ? PLAYER_X : PLAYER_O;
-let gameActive = true;
-let winningCombinations = [
+let active = true;
+let winning = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
@@ -15,15 +15,15 @@ let winningCombinations = [
 
 function boxClick(event) {
     let cell = event.target;
-    if (!gameActive || cell.textContent !== '') return;
+    if (!active || cell.textContent !== '') return;
 
     cell.textContent = currentPlayer;
     if (checkWinner(currentPlayer)) {
-        gameActive = false;
+        active = false;
         display.textContent = `Player ${currentPlayer} wins!`;
         audio.play();
     } else if ([...cells].every(cell => cell.textContent !== '')) {
-        gameActive = false;
+        active = false;
         display.textContent = 'Draw!';
     } else {
         currentPlayer = currentPlayer === PLAYER_X ? PLAYER_O : PLAYER_X;
@@ -32,7 +32,7 @@ function boxClick(event) {
 }
 
 function checkWinner(player) {
-    return winningCombinations.some(combination => {
+    return winning.some(combination => {
         return combination.every(index => {
             return cells[index].textContent === player;
         });
@@ -55,10 +55,6 @@ function checkWinner(player) {
  }
  )
 
-// function restartGame() {
-  
-
-// }
 
 cells.forEach(cell => cell.addEventListener('click', boxClick));
 restartButton.addEventListener('click', restartGame);
